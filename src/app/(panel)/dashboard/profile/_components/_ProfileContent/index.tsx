@@ -192,9 +192,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
                             <CardContent className="space-y-6">
                                 <div className="flex justify-center">
                                     <AvatarProfile
-                                        avatarUrl={user.image}
-                                        alt={`Imagem de ${user.name}`}
-                                        userId={user.id}
+                                        avatarUrl={user?.image}
+                                        alt={`Imagem de ${user?.name}`}
+                                        userId={user?.id}
                                     />
                                 </div>
                                 <div className="space-y-4">
