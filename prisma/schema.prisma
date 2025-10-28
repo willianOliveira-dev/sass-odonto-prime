@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+  // “native” faz o Prisma gerar o binário para o sistema atual; “windows” garante compatibilidade se você alternar ambientes.
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  BASIC
+  PROFESSIONAL
+  PREMIUM
+}
+
+// -------------------
+// Sistema da aplicação
+// -------------------
+
+model Appointment {
+  id              String   @id @default(cuid())
+  userId          String
+  serviceId       String
+  name            String
+  email           String
+  phone           String
+  appointmentDate DateTime
+  time            String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  service Service @relation(fields: [serviceId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+model Reminder {
+  id          String   @id @default(cuid())
+  userId      String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  userId       String
+  name         String
+  description  String?       @default("")
+  price        Int
+  duration     Int
+  status       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id])
+  appointments Appointment[]
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  status    String
+  plan      Plan
+  priceId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// -------------------
+// Autenticação (padrão Auth.js v5)
+// -------------------
+
+model User {
+  id               String          @id @default(cuid())
+  name             String
+  email            String          @unique
+  password         String?
+  emailVerified    DateTime?
+  image            String?
+  address          String?
+  phone            String?
+  status           Boolean         @default(true)
+  timezone         String?
+  stripeCustomerId String?         @unique
+  times            String[]        @default([])
+  appointments     Appointment[]
+  userVerification OtpVerification[]
+  subscription     Subscription?
+  reminders        Reminder[]
+  services         Service[]
+  accounts         Account[]
+  sessions         Session[]
+  authenticators   Authenticator[]
+  passwordReset    PasswordReset[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// OTP - One-Time Password
+model OtpVerification {
+  identifier String   @id @default(cuid())
+  userId     String
+  code       String
+  expiresAt  DateTime
+  used       Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Forgot
+model PasswordReset {
+    identifier  String @id @default(uuid())
+    email       String
+    code        String
+    expiresAt   DateTime
+    used        Boolean @default(false)
+    createdAt   DateTime @default(now())
+    user User   @relation(fields: [email], references: [email])
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
