@@ -1,8 +1,9 @@
-'use client';
-import Image from 'next/image';
-import doctorImage from '../../../../../public/doctor-hero.png';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+"use client";
+import Image from "next/image";
+import doctorImage from "../../../../../public/doctor-hero.png";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function Hero() {
     return (
@@ -17,10 +18,10 @@ export function Hero() {
                         className="flex-2 max-w-2xl space-y-6 flex flex-col justify-center py-6 px-2 lg:p-0"
                     >
                         <h1 className="text-4xl font-bold lg:text-5xl">
-                            Encontre os{' '}
+                            Encontre os{" "}
                             <span className="text-blue-500">
                                 melhores profissionais
-                            </span>{' '}
+                            </span>{" "}
                             em um único local!
                         </h1>
                         <p className="text-base md:text-lg dark:text-gray-400">
@@ -28,8 +29,13 @@ export function Hero() {
                             com foco em agilizar seu atendimento de forma
                             simplificada e organizada.
                         </p>
-                        <Button className="bg-blue-500 hover:bg-blue-400 self-start">
-                            Encontre uma clínica
+                        <Button
+                            asChild
+                            className="bg-blue-500 hover:bg-blue-400 self-start"
+                        >
+                            <Link href="#professionals">
+                                Encontre uma clínica
+                            </Link>
                         </Button>
                     </motion.article>
                     <div className="hidden lg:block">

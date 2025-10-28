@@ -93,7 +93,7 @@ const CardProfessional = ({ professional, delay }: CardProfessionalProps) => {
 export function Professionals({ professionals }: ProfessionalsProps) {
     return (
         <section
-            id="profissionais"
+            id="professionals"
             className="bg-gray-100 py-12 dark:bg-[#0d0d0d] md:py-16"
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
