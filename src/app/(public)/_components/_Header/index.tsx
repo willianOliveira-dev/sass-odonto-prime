@@ -24,7 +24,7 @@ export function Header() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const { data: session, status } = useSession();
 
-    const navItems = [{ href: "#profissionais", label: "Profissionais" }];
+    const navItems = [{ href: "#professionals", label: "Profissionais" }];
 
     const NavLinks = () => (
         <>
@@ -65,7 +65,7 @@ export function Header() {
     return (
         <header
             className={clsx(
-                "fixed w-full top-0 z-[999] py-4 px-6 shadow-sm dark:shadow-black bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-sm",
+                "fixed min-w-screen top-0 z-[999] py-4 px-6 shadow-sm dark:shadow-black bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-sm",
             )}
         >
             <div className="container mx-auto flex items-center justify-between w-full">
