@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextResponse, type NextRequest } from "next/server";
 import { revalidatePath } from "next/cache";
-
+import { type NextAuthRequest } from "next-auth";
 /*
  Rota para buscar todos os agendamentos de uma clínica específica.
 
@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 > Preciso ter o id da clinica  (NÃO POSSO RECEBER DA REQUISIÇÃO req.params)
  */
 
-export const GET = auth(async (req: NextRequest) => {
+export const GET = auth(async (req: NextAuthRequest) => {
   if (!req.auth)
     return NextResponse.json(
       { error: "Usuário não autenticado." },
