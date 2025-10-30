@@ -1,10 +1,9 @@
 "use client";
 import clsx from "clsx";
-import Image from "next/image";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { JSX, useState } from "react";
 import { Check, ChevronsUpDown, LogOut } from "lucide-react";
-import { ProfileFormData, useProfileForm } from "../../_hook/useProfileForm";
+import { ProfileFormData, useProfileForm } from "../../_hooks/useProfileForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRight } from "lucide-react";
@@ -52,7 +51,7 @@ import { LoaderSpinner } from "@/components/ui/LoaderSpinner";
 import { updateProfile } from "../../_actions/update-profile";
 import { toast } from "sonner";
 import { formatPhone } from "@/helpers/formatPhone";
-import { useLinkedProvider } from "../../_hook/useLinkedProvider";
+import { useLinkedProvider } from "../../_hooks/useLinkedProvider";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
