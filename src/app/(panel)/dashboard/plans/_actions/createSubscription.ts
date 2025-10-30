@@ -1,5 +1,6 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { stripe } from '../../../../../helpers/plans/stripe';
 import { Plan } from '@prisma/client';
@@ -15,7 +16,7 @@ const PLANS_MAP = {
 };
 
 export async function createSubscrition({ plan }: CreateSubscriptionProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user) {
         return {

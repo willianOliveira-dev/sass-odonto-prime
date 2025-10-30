@@ -1,4 +1,5 @@
-import { signIn } from '@/lib/auth';
+'use client';
+import { signIn } from 'next-auth/react';
 
 export async function loginActionCredentials(email: string, password: string) {
     await signIn('credentials', {

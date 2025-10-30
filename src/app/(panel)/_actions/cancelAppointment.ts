@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -13,7 +14,7 @@ type DeleteAppointmentProps = z.infer<typeof formSchema>;
 export async function cancelAppointment({
     appointmentId,
 }: DeleteAppointmentProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session) {
         return {

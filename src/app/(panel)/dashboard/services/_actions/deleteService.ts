@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -11,7 +12,7 @@ const formSchema = z.object({
 type DeleteServiceProps = z.infer<typeof formSchema>;
 
 export async function deleteService({ serviceId }: DeleteServiceProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user.id) {
         return {
@@ -40,7 +41,6 @@ export async function deleteService({ serviceId }: DeleteServiceProps) {
         return {
             data: 'Serviço deletado com sucesso!',
         };
-        
     } catch (error) {
         console.log(error);
         return {

@@ -1,7 +1,8 @@
 'use server';
 import prisma from '@/lib/prisma';
 import { z } from 'zod';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
 const formSchema = z.object({
@@ -13,7 +14,7 @@ const formSchema = z.object({
 type DeleteReminderProps = z.infer<typeof formSchema>;
 
 export async function deleteReminder({ reminderId }: DeleteReminderProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user.id) {
         return {

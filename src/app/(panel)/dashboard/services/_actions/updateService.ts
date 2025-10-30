@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -24,7 +25,7 @@ const formSchema = z.object({
 type UpdateServiceProps = z.infer<typeof formSchema>;
 
 export async function updateService(formData: UpdateServiceProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user.id) {
         return {

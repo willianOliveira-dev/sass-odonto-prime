@@ -1,5 +1,6 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { redirect } from 'next/navigation';
@@ -13,7 +14,7 @@ import { LoaderFallback } from '../_components/LoaderFallback';
 // Podemos chamar o componente de assincrono diretamente
 // pois ele é um Server Component por padrão
 export default async function DashboardPage() {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
     const isVerified = session?.user.emailVerified;
 
     if (!session) {

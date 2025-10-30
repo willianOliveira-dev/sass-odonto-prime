@@ -1,12 +1,13 @@
 'use server';
 import { Suspense } from 'react';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { ServicesContent } from './_components/_ServicesContent';
 import { LoaderFallback } from '../../_components/LoaderFallback';
 
 export default async function ServicesPage() {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
     const isVerified = session?.user.emailVerified;
 
     if (!session) {

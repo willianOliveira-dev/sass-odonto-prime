@@ -1,10 +1,11 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { hasLinnkedProvider } from '@/app/(panel)/dashboard/profile/_data-access-layer/hasLinkedProvider';
 import { NextResponse } from 'next/server';
 
 export async function POST() {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user) {
         return NextResponse.json({

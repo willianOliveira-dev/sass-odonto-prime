@@ -1,9 +1,10 @@
 'use server'; //server action
-import { auth } from "@/lib/auth";
-import { hasLinnkedProvider } from "../_data-access-layer/hasLinkedProvider";
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { hasLinnkedProvider } from '../_data-access-layer/hasLinkedProvider';
 
 export async function checkLinkeProvider() {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user.id) {
         return {
@@ -17,4 +18,3 @@ export async function checkLinkeProvider() {
         provider,
     };
 }
-

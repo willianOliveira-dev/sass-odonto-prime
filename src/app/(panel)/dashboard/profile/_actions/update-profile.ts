@@ -1,6 +1,7 @@
 'use server'; // server action
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -24,7 +25,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 // sempre uma server action deve ser assícrona
 export async function updateProfile(formData: FormSchema) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
     const schema = formSchema.safeParse(formData);
 
     if (!session?.user.id) {
@@ -58,7 +59,6 @@ export async function updateProfile(formData: FormSchema) {
         return {
             data: 'Clínica atualizada com sucesso!',
         };
-        
     } catch (error) {
         console.log(error);
         return {

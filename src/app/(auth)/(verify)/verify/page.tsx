@@ -1,10 +1,11 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { VerifyContent } from '../_components/_Verify';
 import { redirect } from 'next/navigation';
 
 export default async function VerifyPage() {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session) {
         redirect('/');

@@ -1,5 +1,6 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { PlanDetailsProps } from '../plans';
 import prisma from '@/lib/prisma';
 import { canCreateService } from './canCreateService';
@@ -28,7 +29,7 @@ export interface ResultPermissionProps {
 export async function canPermissions({
     type,
 }: CanPermissionsProps): Promise<ResultPermissionProps> {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user) {
         return {

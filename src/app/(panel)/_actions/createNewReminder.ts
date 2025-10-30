@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -16,7 +17,7 @@ type CreateNewReminderProps = z.infer<typeof formSchema>;
 export async function createNewReminder({
     description,
 }: CreateNewReminderProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user.id) {
         return {

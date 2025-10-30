@@ -1,10 +1,11 @@
 'use server';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { stripe } from '@/helpers/plans/stripe';
 
 export async function createPortalCustomer() {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user) {
         return {

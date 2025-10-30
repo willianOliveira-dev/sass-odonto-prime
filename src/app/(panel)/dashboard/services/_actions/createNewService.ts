@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
-import getSession from '@/lib/getSession';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 
@@ -23,7 +24,7 @@ const formSchema = z.object({
 type CreateServiceProps = z.infer<typeof formSchema>;
 
 export async function createNewService(formData: CreateServiceProps) {
-    const session = await getSession();
+    const session = await getServerSession(authOptions);
     const schema = formSchema.safeParse(formData); // Validar se os valores passados batem com a nossa validação.
 
     if (!session?.user.id) {
