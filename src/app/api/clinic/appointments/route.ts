@@ -9,14 +9,7 @@ import { revalidatePath } from "next/cache";
 > Preciso ter o id da clinica  (NÃO POSSO RECEBER DA REQUISIÇÃO req.params)
  */
 
-interface AuthRequest {
-  auth?: {
-    userId: string;
-    email: string;
-  };
-}
-
-export const GET = auth(async (req: AuthRequest) => {
+export const GET = auth(async (req: any) => {
   if (!req.auth)
     return NextResponse.json(
       { error: "Usuário não autenticado." },
