@@ -2,9 +2,10 @@
 import clsx from "clsx";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { JSX, useState } from "react";
-import { Check, ChevronsUpDown, LogOut } from "lucide-react";
+import { Check, ChevronsUpDown, LogOut, Skull } from "lucide-react";
 import { ProfileFormData, useProfileForm } from "../../_hooks/useProfileForm";
 import { Input } from "@/components/ui/input";
+import { deleteAccount } from "../../_actions/delete-account";
 import { Label } from "@/components/ui/label";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -103,6 +104,8 @@ export function ProfileContent({ user }: ProfileContentProps) {
     const [selectHours, setSelectHours] = useState<string[]>(user?.times ?? []);
     const [loading, setLoading] = useState<boolean>(false);
     const [loadingExit, setLoadingExit] = useState<boolean>(false);
+    const [loadingDeleteAccount, setLoadingDeleteAccount] =
+        useState<boolean>(false);
     const { update } = useSession();
     const { isLinked, provider } = useLinkedProvider();
     const router = useRouter();
@@ -137,12 +140,32 @@ export function ProfileContent({ user }: ProfileContentProps) {
         );
     };
 
+    const handleDeleteAccount = async () => {
+        setLoadingDeleteAccount(true);
+
+        const res = await deleteAccount();
+        if (res.error) {
+            toast.error("Erro ao deletar conta:", {
+                richColors: true,
+                description: res.error,
+            });
+            return;
+        }
+
+        toast.success(res.data);
+
+        await signOut();
+        await update();
+        setLoadingDeleteAccount(false);
+        router.replace("/");
+    };
+
     const handleLogout = async () => {
         setLoadingExit(true);
         await signOut();
         await update();
-        setLoadingExit(false);
         router.replace("/");
+        setLoadingExit(false);
     };
 
     const onSubmit = async (values: ProfileFormData) => {
@@ -574,18 +597,42 @@ export function ProfileContent({ user }: ProfileContentProps) {
                                         )}
                                     </Button>
                                 </div>
+
+                                <Button
+                                    type="button"
+                                    className="mt-4 cursor-pointer"
+                                    onClick={() => handleLogout()}
+                                >
+                                    <LogOut className="w-5 h-5" />
+                                    <span>
+                                        {" "}
+                                        {loadingExit
+                                            ? "Saindo..."
+                                            : "Sair da Conta"}
+                                    </span>
+                                </Button>
                             </CardContent>
                         </Card>
                     </form>
                 </Form>
-
-                <Button
-                    className="mt-4 cursor-pointer"
-                    onClick={() => handleLogout()}
-                >
-                    <LogOut className="w-5 h-5" />
-                    <span> {loadingExit ? "Saindo..." : "Sair da Conta"}</span>
-                </Button>
+                <div className="mt-4 p-2 space-y-1.5">
+                    <p className="flex gap-2 text-md font-semibold">
+                        <Skull />
+                        Excluir conta
+                    </p>
+                    <p className="text-gray-400">
+                        Se você excluir sua conta, todos os dados relacionados a
+                        você serão deletados e não será possível a restauração.
+                    </p>
+                    <Button
+                        onClick={handleDeleteAccount}
+                        className="mt-2 text-red-500 bg-gray-200/80 dark:bg-gray-900/80 cursor-pointer hover:scale-101"
+                    >
+                        {loadingDeleteAccount
+                            ? "Excluindo..."
+                            : "Excluir minha conta"}
+                    </Button>
+                </div>
             </div>
         </section>
     );
