@@ -19,39 +19,42 @@ const resetPassordSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const { email, newPassword } = await req.json();
-
-  const schema = resetPassordSchema.safeParse({ email, password: newPassword });
-
-  if (schema.error) {
-    return NextResponse.json(
-      {
-        error: schema.error.issues[0].message,
-      },
-      {
-        status: 400,
-      },
-    );
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (!user) {
-    return NextResponse.json(
-      {
-        error: "Usuário não encontrado.",
-      },
-      {
-        status: 404,
-      },
-    );
-  }
-
   try {
+    const { email, newPassword } = await req.json();
+
+    const schema = resetPassordSchema.safeParse({
+      email,
+      password: newPassword,
+    });
+
+    if (schema.error) {
+      return NextResponse.json(
+        {
+          error: schema.error.issues[0].message,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Usuário não encontrado.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
@@ -64,11 +67,10 @@ export async function POST(req: NextRequest) {
     });
 
     revalidatePath("/forgot");
-    
+
     return NextResponse.json({
       success: true,
     });
-    
   } catch (error) {
     return NextResponse.json(
       {

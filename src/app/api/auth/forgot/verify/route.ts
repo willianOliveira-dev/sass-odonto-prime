@@ -16,45 +16,45 @@ const verifySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const { email, code } = await req.json();
-
-  const schema = verifySchema.safeParse({ email, code });
-
-  if (schema.error) {
-    return NextResponse.json({
-      error: schema.error.issues[0].message,
-    });
-  }
-
-  const verification = await prisma.passwordReset.findFirst({
-    where: {
-      email,
-      used: false,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  if (!verification || verification.code !== code) {
-    return NextResponse.json(
-      {
-        error: "Código inválido.",
-      },
-      { status: 400 },
-    );
-  }
-
-  if (verification.expiresAt < new Date()) {
-    return NextResponse.json(
-      {
-        error: "Código expirado.",
-      },
-      { status: 400 },
-    );
-  }
-
   try {
+    const { email, code } = await req.json();
+
+    const schema = verifySchema.safeParse({ email, code });
+
+    if (schema.error) {
+      return NextResponse.json({
+        error: schema.error.issues[0].message,
+      });
+    }
+
+    const verification = await prisma.passwordReset.findFirst({
+      where: {
+        email,
+        used: false,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (!verification || verification.code !== code) {
+      return NextResponse.json(
+        {
+          error: "Código inválido.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (verification.expiresAt < new Date()) {
+      return NextResponse.json(
+        {
+          error: "Código expirado.",
+        },
+        { status: 400 },
+      );
+    }
+
     await prisma.passwordReset.update({
       where: {
         identifier: verification.identifier,

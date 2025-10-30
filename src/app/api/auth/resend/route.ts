@@ -3,9 +3,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { sendVerificationCode } from "@/lib/emailVerification";
 
 export async function POST(req: NextRequest) {
-  const { userId, email } = await req.json();
-
   try {
+    const { userId, email } = await req.json();
     const isVerified = await sendVerificationCode(userId, email);
 
     if (isVerified.error) {

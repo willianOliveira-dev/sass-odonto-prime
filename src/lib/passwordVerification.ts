@@ -4,8 +4,8 @@ import { generateCode } from "@/helpers/generateCode";
 
 // Sistema de verificação OTP
 export async function sendVerificationCode(email: string) {
-  const now = Date.now();
-  const TWO_DAY_MS = now + 48 * 60 * 60 * 1000;
+  const now = new Date();
+  const TWO_DAY_MS = now.getTime() + 48 * 60 * 60 * 1000;
   const code = generateCode({ length: 6 });
   const expiresAt = new Date(TWO_DAY_MS); // expira em 2 dias
 

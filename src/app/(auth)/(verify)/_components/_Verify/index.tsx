@@ -32,7 +32,7 @@ export function VerifyContent({ userId, email }: VerifyContentProps) {
     const router = useRouter();
 
     const startTimer = () => {
-        setTimeLeft(60);
+        setTimeLeft(90);
         setCanResend(false);
 
         const timer = setInterval(() => {

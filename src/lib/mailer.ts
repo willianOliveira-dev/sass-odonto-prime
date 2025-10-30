@@ -22,7 +22,7 @@ const htmlRendering = (htmlContext: "OTP" | "FORGOT", code: string, to: string) 
           Use este código para fazer login na OdontoPrime
         </p>
         <div style="font-size: 28px; font-weight: bold; color: #155dfc; margin: 15px 0;">${code}</div>
-        <p style="color: #888; font-size: 14px; margin-bottom: 25px;">Este código expira em 10 minutos</p>
+        <p style="color: #888; font-size: 14px; margin-bottom: 25px;">Este código expira em 1:30 minutos</p>
         <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Este código fará login seguro usando seu e-mail</p>
         <div style="padding: 10px; margin-bottom: 20px;"><span style="color: #333; font-weight: bold;">${to}</span></div>
         <p style="color: #999; font-size: 12px;">Se você não solicitou este e-mail, pode ignorá-lo com segurança.</p>
